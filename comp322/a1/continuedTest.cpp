@@ -2,7 +2,7 @@
 // Name        : Ass1.cpp
 // Author      : Gheorghe
 // Version     :
-// Copyright   : 
+// Copyright   :
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 #include "continued.h"
@@ -15,6 +15,12 @@ using namespace std;
 
 int main() {
 	// create the golden ratio and print it
+
+    int a = 75;
+    int b = 33;
+
+
+
 	ContinuedFraction goldenRatio;
 	goldenRatio.head = 1;
 	goldenRatio.tail = &goldenRatio;
@@ -26,7 +32,6 @@ int main() {
 	ContinuedFraction *someCF = getCF(someArray,5);
 	cout << "You just created ";
 	printCF(*someCF,5);
-
 	// get approximation
 	Fraction testFraction = getApproximation(someCF,5);
 	cout << "..and its approximation is " << testFraction.numerator << "/" << testFraction.denominator << endl;
@@ -38,6 +43,9 @@ int main() {
 	int fixedArray[] = {3,2,1};
 	int periodArray[] = {3,5,2};
 	printCF(*getCF(tesHead,getCF(fixedArray,3), getCF(periodArray,3)),20);
+
+
+
 
 
 
