@@ -1,6 +1,6 @@
 """
-STUDENT NAME:
-STUDENT ID:
+STUDENT NAME: Jeffrey Ng
+STUDENT ID: 260452449
 
 COMP 557: Assignment 1
 """
@@ -187,23 +187,82 @@ def drawScene():
     draw3DCoordinateAxes()  #  world coordinates
     
     # TODO:  ---------------  ADD YOUR CODE HERE ---------------------
+   
     #  ---------------   BEGIN SOLUTION  ----------------------- 
     # Add your own scene here by replacing the sample scene which simply
     # draws a cube and rotates it
     global myQuadric, movingCameraAngle
+        
+
+  
     
-    deg = movingCameraAngle
-    
+     # Floor    
     glPushMatrix()
-    glTranslatef( 0.0,  0, -3.0)
-    glRotatef(deg ,  0, 1, 0)  
-    drawColoredCube(1)
+    glTranslatef(0, -1, 0)
+    glRotatef(-90, 1, 0, 0)
+    glScalef(3,3,0)
+    glColor3f(0.5,0.5,0.5)
+    drawSquare(4)
+    glPopMatrix()
+    
+    #Box
+    glPushMatrix()
+    glTranslatef(1,-0.5,1)
+    glRotatef(18,0,1,0)
+    glScalef(0.4,1,0.8)
+    drawGrayCube(5)
+    glPopMatrix()    
+    
+    #sphere
+    glPushMatrix()
+    glColor3f(255,255,255)
+    glTranslatef( -1,  -0.5, 3.0)
+    glScalef(0.3,0.6,0.6)
+    glutWireTeapot(1)
+    glPopMatrix()
+    
+    #Pyramid
+    glPushMatrix()
+    glTranslatef( 0, -0.5, -3.0)
+    glRotatef(-90 ,  0, 1, 0)
+    glScalef(0.5,0.5,0.5)
+    
+    glBegin( GL_TRIANGLES )
+    glColor3f(1,0,0)
+    glVertex3f(0,1,0)
+    glColor3f(0,1,0)
+    glVertex3f(-1,-1,1)
+    glColor3f(0,0,1)
+    glVertex3f(1,-1,1)
+    
+    glColor3f(1,0,0)
+    glVertex3f(0,1,0)
+    glColor3f(0,1,0)
+    glVertex3f(-1,-1,1)
+    glColor3f(0,0,1)
+    glVertex3f(0,-1,-1)
+    
+    glColor3f(1,0,0)
+    glVertex3f(0,1,0)
+    glColor3f(0,1,0)
+    glVertex3f(0,-1,-1)
+    glColor3f(0,0,1)
+    glVertex3f(1,-1,1)
+    
+    glColor3f(1,0,0)
+    glVertex3f(-1,-1,1)
+    glColor3f(0,1,0)
+    glVertex3f(0,-1,-1)
+    glColor3f(0,0,1)
+    glVertex3f(1,-1,1)
+    glEnd()
+        
     glPopMatrix()
 
-    glPushMatrix()
-    glTranslatef( 2.0,  0, -6.0)
-    gluSphere(myQuadric, .5, 20, 20)
-    glPopMatrix()
+  
+    
+    #
+
     #  ---------------   END SOLUTION  ----------------------- 
 
 # ------ ADD CODE IN drawMovingViewVolume() ------
@@ -221,7 +280,12 @@ def drawMovingViewVolume():
     
     #TODO:  ---------------  ADD YOUR CODE HERE ---------------------
     #  ---------------   BEGIN SOLUTION  -----------------------
-    
+    glPushMatrix()
+    glTranslatef( eyeX, eyeY, eyeZ)
+    glRotatef(tilt, 1, 0, 0)
+    glRotatef(-pan,0,1,0)
+    drawViewVolume(left,right,bottom,top,near,far)
+    glPopMatrix()
     #  ---------------   END SOLUTION  -----------------------
 
 def drawMovingCamera():
@@ -304,8 +368,11 @@ def Viewport2():
     in response to the keyboard and mouse input.
     This view volume motion should be consistent with what is seen in viewport 1.  
     '''
-    
+   
+       
     glViewport(int(sizeViewport),0,int(sizeViewport),int(sizeViewport))
+    
+
     
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()    
@@ -316,15 +383,16 @@ def Viewport2():
     lookat2 =  [0.0, 0.0, -(near + far)/2]
     updir   =  [0.0, 1.0, 0.0]
     
+    
     glMatrixMode(GL_MODELVIEW) 
     glLoadIdentity()
-
     gluLookAt( eye2[0], eye2[1], eye2[2], lookat2[0], lookat2[1], lookat2[2], updir[0], updir[1], updir[2])
 
     drawScene()
     drawMovingCamera()
     drawMovingViewVolume()
     
+   
 
 # ---- ADD CODE IN Viewport3()----
 def Viewport3():
@@ -357,7 +425,35 @@ def Viewport3():
     
     #TODO:  ---------------  ADD YOUR CODE HERE ---------------------
     #  ---------------   BEGIN SOLUTION  -----------------------
-
+    
+    #Normalize
+    
+    glPushMatrix()
+    glTranslatef( -1, -1, -1 )  
+    glScalef(2 / (right - left), 2 / (top - bottom), -2 / (far - near))
+    glTranslatef( -left, -bottom, near )
+    glMultMatrixd(np.transpose(M))
+    # Draw Frsutum outline kinda
+    drawViewVolume(left, right, bottom, top, near, far)
+    glPopMatrix()
+    
+    # Need to renormalize. 
+    glPushMatrix()
+    glTranslatef( -1, -1, -1 )  
+    glScalef(2 / (right - left), 2 / (top - bottom), 2 / (far - near))
+    glTranslatef( -left, -bottom, near )
+    glMultMatrixd(np.transpose(M))
+    
+    # Update based on how the camera moves.
+    glTranslatef( -eyeX, eyeY, -eyeZ )
+    glRotatef(tilt,  1, 0, 0)
+    glRotatef(pan, 0, 1, 0)
+    
+    # Need to redraw the scene for the normalized view
+    drawScene()  
+    drawMovingCamera()
+    glPopMatrix()
+    
     #  ---------------   END SOLUTION  -----------------------
 # ----- Viewport 4 related functions 
 '''    
@@ -435,6 +531,12 @@ def perspective(fovy, aspect, near, far):
     #TODO: ---------------  ADD YOUR CODE HERE ---------------------
     #  ---------------   BEGIN SOLUTION  -----------------------
     
+    P = projective(near,far) * P
+    
+    P = P * translate([0,0,1])
+    P = P * scale([2/(aspect*near*tan(fovy / 2 / 180.0 * pi)), 2/(near*tan(fovy / 2 / 180.0 * pi)), 2/(near - far)])
+    P = P * translate([0, 0, near]) 
+    
     #  ---------------   END SOLUTION  -----------------------
     return np.matrix(P)
 
@@ -470,13 +572,46 @@ def Viewport4():
     
         #TODO: ---------------  ADD YOUR CODE HERE ---------------------
         #  ---------------   BEGIN SOLUTION  -----------------------
-    
+        # Similar to View point 1. Just alter camera points
+        gluLookAt(movingCameraPos[0], movingCameraPos[1], movingCameraPos[2], lookat[0],lookat[1],lookat[2],updir[0], updir[1], updir[2])
+        drawScene()
+        drawMovingViewVolume()
         #  ---------------   END SOLUTION  -----------------------
     else: # perform projection and lookat without using gl functions
         pass
     
         #TODO: ---------------  ADD YOUR CODE HERE ---------------------
         #  ---------------   BEGIN SOLUTION  -----------------------
+    
+        # Construct perspective matrix
+        glMatrixMode(GL_PROJECTION)
+        glPushMatrix()
+        glLoadIdentity()
+        # Take same perspective values as above.
+        transposedPMatrix = np.transpose(perspective(60, 1, 0.01, 20))
+        # print(transposedMatrix)
+        glMultMatrixd(transposedPMatrix)
+        glPopMatrix()
+        
+        glMatrixMode(GL_MODELVIEW)
+        glPushMatrix() 
+        glLoadIdentity()
+        
+        # Need to Calculate the angle at which the camera is looking down at.
+        movingCameraViewAngle = -rad2deg(arctan2(movingCameraPos[1], movingCameraRadius)) 
+        transposedVAMatrix = np.transpose(rotateX(movingCameraViewAngle))
+        transposedAMatrix = np.transpose(rotateY(movingCameraAngle))
+        transposedTranslationMatrix = np.transpose(translate([-movingCameraPos[0],  -movingCameraPos[1], -movingCameraPos[2]]))
+        # print (transposedVAMatrix)        
+        # print (transposedAMatrix) 
+        # print (transposedTranslationMatrix) 
+        glMultMatrixd(transposedVAMatrix)
+        glMultMatrixd(transposedAMatrix)
+        glMultMatrixd(transposedTranslationMatrix)
+       
+        drawScene() 
+        drawMovingViewVolume()                
+        glPopMatrix()
         
         #  ---------------   END SOLUTION  -----------------------
         

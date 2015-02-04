@@ -99,6 +99,37 @@ def drawSquare(size):        #  give it a size parameter rather than bothering t
     glVertex3f(-0.5*size, 0.5*size,  0)
     glEnd()
 
+def drawPyramid():
+    glBegin( GL_TRIANGLES )
+    glColor3f(1,0,0)
+    glVertex3f(0,1,0)
+    glColor3f(0,1,0)
+    glVertex3f(-1,-1,1)
+    glColor3f(0,0,1)
+    glVertex3f(1,-1,1)
+    
+    glColor3f(1,0,0)
+    glVertex3f(0,1,0)
+    glColor3f(0,1,0)
+    glVertex3f(-1,-1,1)
+    glColor3f(0,0,1)
+    glVertex3f(0,-1,-1)
+    
+    glColor3f(1,0,0)
+    glVertex3f(0,1,0)
+    glColor3f(0,1,0)
+    glVertex3f(0,-1,-1)
+    glColor3f(0,0,1)
+    glVertex3f(1,-1,1)
+    
+    glColor3f(1,0,0)
+    glVertex3f(-1,-1,1)
+    glColor3f(0,1,0)
+    glVertex3f(0,-1,-1)
+    glColor3f(0,0,1)
+    glVertex3f(1,-1,1)
+    glEnd()
+
 def drawGrayCube( size ):        #  give it a size parameter rather than bothering to do a glScale
 
     #front face
