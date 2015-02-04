@@ -18,8 +18,9 @@ int main() {
 
     int a = 75;
     int b = 33;
+    ContinuedFraction CFF = *getCF(2,5);
 
-
+    std::cout << CFF.head << std::endl;
 
 	ContinuedFraction goldenRatio;
 	goldenRatio.head = 1;
@@ -43,10 +44,6 @@ int main() {
 	int fixedArray[] = {3,2,1};
 	int periodArray[] = {3,5,2};
 	printCF(*getCF(tesHead,getCF(fixedArray,3), getCF(periodArray,3)),20);
-
-
-
-
 
 
 
