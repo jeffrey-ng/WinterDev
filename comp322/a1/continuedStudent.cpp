@@ -9,9 +9,6 @@ unsigned int gcd(unsigned int a, unsigned int b){
     return gcd(b%a, a);
 }
 
-unsigned int gcdFaster(unsigned int a, unsigned int b) {
-}
-
 ContinuedFraction *getCFlargerThanOne(unsigned int b, unsigned int a) {
     ContinuedFraction *CF = new ContinuedFraction;
 
@@ -29,44 +26,80 @@ ContinuedFraction *getCFlargerThanOne(unsigned int b, unsigned int a) {
 }
 
 ContinuedFraction *getCF(unsigned int b, unsigned int a) {
-    ContinuedFraction *initCF = new ContinuedFraction;
 
     if (b/a > 1) {
-        initCF = getCFlargerThanOne(b,a);
+        return getCFlargerThanOne(b,a);
     } else {
-        initCF = getCFlargerThanOne(0, a);
+        ContinuedFraction *CF = new ContinuedFraction;
+        CF->head = 0;
+        CF->tail = getCF(a, b);
+        return CF;
     }
 
-    return initCF;
 }
 
 
 ContinuedFraction *getCF(unsigned int head, ContinuedFraction *fixed, ContinuedFraction *period) {
   // your code here
-    ContinuedFraction newFraction;
-    newFraction.head = head;
-    newFraction.tail = fixed;
+    ContinuedFraction *newFraction = new ContinuedFraction;
+    newFraction->head = head;
+    newFraction->tail = fixed;
 
+    //need to make an infinite loop.
+    // ex: aaa,bbb,aaa,... where the aaa are actually the same
+
+    ContinuedFraction *copiedPart = new ContinuedFraction;
+    copiedPart->head = period->head;
+    while(period->tail != NULL) {
+        ContinuedFraction *temp = new ContinuedFraction;
+        temp->head = period->head;
+        while(copiedPart->tail != NULL) {
+            copiedPart=copiedPart->tail;
+        }
+        copiedPart->tail = temp;
+        period = period->tail;
+
+    }
+
+    //Get to end of copied part. This is used to jump to end
+    ContinuedFraction *tPoint = copiedPart;
+    while (tPoint->tail != NULL) {
+        tPoint = tPoint->tail;
+    }
+
+    tPoint->tail = copiedPart;
+
+    //now we need to move this copied part to end of our new fractoin
+    tPoint = newFraction;
+    while (tPoint->tail != NULL) {
+        tPoint = tPoint->tail;
+    }
+    tPoint->tail = copiedPart;
+
+    return newFraction;
 }
+//takes two fractions and adds the econd on to he nd of the other
+
 
 
 Fraction getApproximation(ContinuedFraction *fr, unsigned int n) {
   // your code here
-    Fraction NF;
+    //math
+    Fraction *CF = new Fraction;
 
-    if (n==0) {
-        NF.numerator = 1;
-        NF.denominator = fr->head;
-        return NF;
+    if (n==1) {
+        CF->numerator = fr->head;
+        CF->denominator = 1;
     } else {
-        n--;
-        NF = getApproximation(fr->tail,n);
-        Fraction temp;
-        temp.denominator = fr->head * NF.denominator + NF.denominator;
-        temp.numerator = NF.denominator;
+        Fraction *intermediateFraction = new Fraction;
+        Fraction recursionFraction = getApproximation(fr->tail, n-1);
 
-        return temp;
-
+        intermediateFraction->numerator = ((fr->head) * (recursionFraction.numerator));
+        intermediateFraction->denominator = recursionFraction.denominator;
+        CF->numerator = intermediateFraction->numerator + recursionFraction.denominator;
+        CF->denominator = recursionFraction.numerator;
     }
+    return *CF;
+
 
 }
