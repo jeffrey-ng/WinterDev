@@ -30,7 +30,7 @@ unsigned int spitEulerSquare(unsigned int index) {
         return (index/6)*3 + 2;
     }
     if (index%4 == 0) {
-        return (index/4)*3
+        return (index/4)*3;
     }
 }
 
