@@ -39,29 +39,28 @@ int main() {
     cout << thirtyOverThirteen << " has the cf " << rcf2 << endl;
     cout << rcf2 << " is the cf of " << rcf2->getValue() << endl;
     
-    
     cout << "Print all cfs" << endl;
     cout << "=============" << endl;
     for (auto& x : cfs) {
         string z = x.first;
         cout << "The CF of " << x.first << " is " << *(x.second) << endl;
     }
-    
-    Flower f(sqrt2, 7);
-    cout << endl << "The first few seeds of Square Root 2" << endl;
-    cout << "=============" << endl;
-    auto z = f.getSeeds(10);
-    for (auto& s : z) {
-        cout << setprecision(3) <<"(" << s.x << ", " << s.y << ")";
-    }cout << endl;
-    
-    cout << endl << "Test MVG for Square Root 2" << endl;
-    cout << "=============" << endl;
-    f.writeMVGPicture(cout, 10, 1600, 1600);
-    
-    
-    for (auto& x : cfs) {
-        delete x.second;
-    }
+//
+//    Flower f(sqrt2, 7);
+//    cout << endl << "The first few seeds of Square Root 2" << endl;
+//    cout << "=============" << endl;
+//    auto z = f.getSeeds(10);
+//    for (auto& s : z) {
+//        cout << setprecision(3) <<"(" << s.x << ", " << s.y << ")";
+//    }cout << endl;
+//    
+//    cout << endl << "Test MVG for Square Root 2" << endl;
+//    cout << "=============" << endl;
+//    f.writeMVGPicture(cout, 10, 1600, 1600);
+//    
+//    
+//    for (auto& x : cfs) {
+//        delete x.second;
+//    }
     return 0;
 }
